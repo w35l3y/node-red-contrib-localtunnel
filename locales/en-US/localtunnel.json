@@ -1,0 +1,35 @@
+{
+  "localtunnel": {
+    "status": {
+      "connected": "Connected: __url__",
+      "disconnected": "Disconnected: __subdomain__",
+      "error": "Error: __message__",
+      "unexpected-subdomain": "Disconnected due to unexpected subdomain: __expected__ -> __actual__"
+    },
+    "placeholder": {
+      "port": "NodeRed current Port"
+    },
+    "options": {
+      "input_type": {
+        "button": "Button",
+        "input": "Input"
+      }
+    },
+    "label": {
+      "name": "Name",
+      "input_type": "Input Type",
+      "port": "Port",
+      "subdomain": "Subdomain",
+      "reject_other_subdomain": "Reject other subdomain",
+      "start_on_load": "Start on load",
+      "retry_on_error": "Retries",
+      "local_https": "HTTPS",
+      "allow_invalid_cert": "Allow Invalid Cert",
+      "local_cert": "Local Cert",
+      "local_key": "Local Key",
+      "local_ca": "Local CA",
+      "host": "Host",
+      "local_host": "Local Host"
+    }
+  }
+}

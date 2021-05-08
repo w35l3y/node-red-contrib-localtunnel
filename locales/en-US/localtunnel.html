@@ -1,0 +1,44 @@
+<script type="text/html" data-help-name="localtunnel" data-lang="en-US">
+  <p>A node that wraps the localtunnel controller.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">string | buffer</span></dt>
+    <dd>may be either <code>on</code> or <code>off</code> to start/stop the tunnel</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <ol class="node-ports">
+    <li>
+      Standard output
+      <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>
+          will contain the localtunnel public url that is established or null if the tunnel was
+          stopped
+        </dd>
+      </dl>
+    </li>
+    <li>
+      Standard error
+      <dl class="message-properties">
+        <dt>error <span class="property-type">object</span></dt>
+        <dd>the standard error of the command.</dd>
+      </dl>
+    </li>
+  </ol>
+
+  <h3>References</h3>
+  <ul>
+    <li>
+      <a href="https://github.com/w35l3y/node-red-contrib-localtunnel"
+        >node-red-contrib-localtunnel</a
+      >
+      - the node-red-contrib-localtunnel github repository
+    </li>
+    <li>
+      <a href="https://github.com/localtunnel/localtunnel#readme">localtunnel</a> - the localtunnel
+      github repository
+    </li>
+  </ul>
+</script>

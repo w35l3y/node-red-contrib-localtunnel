@@ -1,0 +1,35 @@
+{
+  "localtunnel": {
+    "status": {
+      "connected": "Conectado: __url__",
+      "disconnected": "Desconectado: __subdomain__",
+      "error": "Erro: __message__",
+      "unexpected-subdomain": "Desconectado devido a subdomínio inesperado: __expected__ -> __actual__"
+    },
+    "placeholder": {
+      "port": "Porta atual NodeRed"
+    },
+    "options": {
+      "input_type": {
+        "button": "Botão",
+        "input": "Input"
+      }
+    },
+    "label": {
+      "name": "Nome",
+      "input_type": "Tipo Input",
+      "port": "Porta",
+      "subdomain": "Subdomínio",
+      "reject_other_subdomain": "Rejeita outro subdomínio",
+      "start_on_load": "Inicia automaticamente",
+      "retry_on_error": "Reconectar",
+      "local_https": "HTTPS",
+      "allow_invalid_cert": "Sem certificado",
+      "local_cert": "Certificado Local",
+      "local_key": "Chave Certificado Local",
+      "local_ca": "CA Local",
+      "host": "Host",
+      "local_host": "Host Local"
+    }
+  }
+}

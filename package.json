@@ -1,0 +1,27 @@
+{
+  "name": "node-red-contrib-localtunnel",
+  "version": "1.0.0",
+  "description": "NodeRed node to wrap and control localtunnel",
+  "homepage": "https://github.com/w35l3y/node-red-contrib-localtunnel",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/w35l3y/node-red-contrib-localtunnel.git"
+  },
+  "keywords": [
+    "node-red",
+    "localtunnel"
+  ],
+  "author": "Wesley Menezes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/w35l3y/node-red-contrib-localtunnel/issues"
+  },
+  "node-red": {
+    "nodes": {
+      "localtunnel": "localtunnel.js"
+    }
+  },
+  "dependencies": {
+    "localtunnel": "^2.0.1"
+  }
+}

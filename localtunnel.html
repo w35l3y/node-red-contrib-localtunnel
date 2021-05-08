@@ -1,0 +1,258 @@
+<script type="text/javascript">
+  function toggleAllowInvalidCert(value) {
+    let display = value ? 'none' : 'block'
+
+    document.querySelectorAll('#local_cert, #local_key, #local_ca').forEach(node => {
+      node.style.display = display
+    })
+  }
+
+  function inject(node, state) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: 'localtunnel/inject/' + node.id,
+        type: 'POST',
+        data: {
+          on: state,
+        },
+        success: resolve,
+        error: ({ status }, message) => {
+          console.log('ERROR', status, message)
+          if (status === 404) {
+            reject(new Error(RED._('node-red:common.notification.errors.not-deployed')))
+          } else if (status === 500) {
+            reject(new Error(RED._('node-red:inject.errors.failed')))
+          } else if (status === 0) {
+            reject(new Error(RED._('node-red:common.notification.errors.no-response')))
+          } else {
+            reject(
+              new Error(
+                RED._('node-red:common.notification.errors.unexpected', {
+                  status,
+                  message,
+                })
+              )
+            )
+          }
+        },
+      })
+    }).then(
+      () => {
+        RED.notify(RED._('node-red:inject.success', { label: state }), {
+          type: 'success',
+          id: 'inject',
+        })
+        return true
+      },
+      ({ message }) => {
+        RED.notify(
+          RED._('node-red:common.notification.error', {
+            message,
+          }),
+          'error'
+        )
+        return false
+      }
+    )
+  }
+
+  RED.nodes.registerType('localtunnel', {
+    category: 'network',
+    defaults: {
+      buttonState: {
+        value: false,
+      },
+      name: {
+        value: '',
+      },
+      input_type: {
+        required: true,
+        value: 'input',
+      },
+      port: {
+        required: false,
+        validate: RED.validators.number(),
+        value: '',
+      },
+      subdomain: {
+        value: '',
+      },
+      reject_other_subdomain: {
+        required: true,
+        value: false,
+      },
+      local_https: {
+        required: true,
+        value: true,
+      },
+      allow_invalid_cert: {
+        required: true,
+        value: false,
+      },
+      start_on_load: {
+        required: true,
+        value: false,
+      },
+      retry_on_error: {
+        required: true,
+        validate: RED.validators.number(),
+        value: 0,
+      },
+      local_cert: {
+        value: '',
+      },
+      local_key: {
+        value: '',
+      },
+      local_ca: {
+        value: '',
+      },
+      host: {
+        value: '',
+      },
+      local_host: {
+        value: '',
+      },
+      inputs: {
+        value: 1,
+      },
+    },
+    inputs: 1,
+    outputs: 1,
+    color: '#3FADB5',
+    label: function () {
+      return this.name || 'localtunnel'
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : ''
+    },
+    icon: 'white-globe.png',
+    align: 'left',
+    button: {
+      toggle: 'buttonState',
+      visible: function () {
+        return !this.inputs
+      },
+      onclick: function () {
+        inject(this, this.buttonState)
+      },
+    },
+    oneditprepare: function () {
+      toggleAllowInvalidCert(this.allow_invalid_cert)
+    },
+    oneditsave: function () {
+      this.inputs = this.input_type === 'input' ? 1 : 0
+
+      inject(this, 'false').then(ok => {
+        if (ok && this.start_on_load) {
+          setTimeout(() => {
+            inject(this, 'true')
+          }, 1000)
+        }
+      })
+    },
+  })
+</script>
+
+<script type="text/html" data-template-name="localtunnel">
+  <div class="form-row" id="name">
+    <label for="node-input-name"
+      ><i class="icon-tag"></i> <span data-i18n="localtunnel.label.name"></span>
+    </label>
+    <input type="text" id="node-input-name" placeholder="localtunnel" />
+  </div>
+
+  <div class="form-row" id="input_type">
+    <label for="node-input-input_type">
+      <span data-i18n="localtunnel.label.input_type"></span>
+    </label>
+    <select type="text" id="node-input-input_type">
+      <option value="button" data-i18n="localtunnel.options.input_type.button"></option>
+      <option value="input" data-i18n="localtunnel.options.input_type.input"></option>
+    </select>
+  </div>
+
+  <div class="form-row" id="port">
+    <label for="node-input-port"> <span data-i18n="localtunnel.label.port"></span></label>
+    <input type="text" id="node-input-port" data-i18n="[placeholder]localtunnel.placeholder.port" />
+  </div>
+
+  <div class="form-row" id="subdomain">
+    <label for="node-input-subdomain">
+      <span data-i18n="localtunnel.label.subdomain"></span>
+    </label>
+    <input type="text" id="node-input-subdomain" />
+  </div>
+
+  <div class="form-row" id="reject_other_subdomain">
+    <label for="node-input-reject_other_subdomain">
+      <span data-i18n="localtunnel.label.reject_other_subdomain"></span>
+    </label>
+    <input type="checkbox" id="node-input-reject_other_subdomain" />
+  </div>
+
+  <div class="form-row" id="local_https">
+    <label for="node-input-local_https">
+      <span data-i18n="localtunnel.label.local_https"></span>
+    </label>
+    <input type="checkbox" id="node-input-local_https" />
+  </div>
+
+  <div class="form-row" id="allow_invalid_cert">
+    <label for="node-input-allow_invalid_cert">
+      <span data-i18n="localtunnel.label.allow_invalid_cert"></span>
+    </label>
+    <input
+      type="checkbox"
+      id="node-input-allow_invalid_cert"
+      onchange="toggleAllowInvalidCert(this.checked)"
+    />
+  </div>
+
+  <div class="form-row" id="local_cert">
+    <label for="node-input-local_cert">
+      <span data-i18n="localtunnel.label.local_cert"></span>
+    </label>
+    <input type="text" id="node-input-local_cert" placeholder="$HOME/.node-red/certs/server.cer" />
+  </div>
+
+  <div class="form-row" id="local_key">
+    <label for="node-input-local_key">
+      <span data-i18n="localtunnel.label.local_key"></span>
+    </label>
+    <input type="text" id="node-input-local_key" placeholder="$HOME/.node-red/certs/server.key" />
+  </div>
+
+  <div class="form-row" id="local_ca">
+    <label for="node-input-local_ca">
+      <span data-i18n="localtunnel.label.local_ca"></span>
+    </label>
+    <input type="text" id="node-input-local_ca" placeholder="$HOME/.node-red/certs/ca.cer" />
+  </div>
+
+  <div class="form-row" id="host">
+    <label for="node-input-host"> <span data-i18n="localtunnel.label.host"></span> </label>
+    <input type="text" id="node-input-host" placeholder="https://localtunnel.me" />
+  </div>
+
+  <div class="form-row" id="local_host">
+    <label for="node-input-local_host">
+      <span data-i18n="localtunnel.label.local_host"></span>
+    </label>
+    <input type="text" id="node-input-local_host" placeholder="localhost" />
+  </div>
+
+  <div class="form-row" id="start_on_load">
+    <label for="node-input-start_on_load">
+      <span data-i18n="localtunnel.label.start_on_load"></span>
+    </label>
+    <input type="checkbox" id="node-input-start_on_load" />
+  </div>
+
+  <div class="form-row" id="retry_on_error">
+    <label for="node-input-retry_on_error">
+      <span data-i18n="localtunnel.label.retry_on_error"></span
+    ></label>
+    <input type="text" id="node-input-retry_on_error" />
+  </div>
+</script>
